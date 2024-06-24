@@ -1,13 +1,15 @@
 package TheGame;
 
-
 import java.awt.Graphics;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import Actions.Buy;
+import Actions.Morgatge;
 import Actions.Move;
 import Actions.RoundAction;
+import Actions.Sell;
 import Math.*;
 import XMLLoader.PlayerWrper;
 
@@ -15,6 +17,9 @@ public class Board {
 	int width = 1100;
 	int height = 1100;
 	static ArrayList<BoardSpace> gameSpaces = new ArrayList<>();
+	static ArrayList<BoardSpace> freeSpaces = new ArrayList<>();
+	static HashMap<PlayerWrper, ArrayList<BoardSpace>> takenSpaces = new HashMap<>();
+
 	ArrayList<SpaceConnections> connections = new ArrayList<>();
 	BoardRules rules = new BoardRules();
 	RuleInterpreter rI = new RuleInterpreter(rules);
@@ -75,6 +80,7 @@ public class Board {
 
 	public void addToBoardSpace(BoardSpace boardSpace) {
 		gameSpaces.add(boardSpace);
+		freeSpaces.add(boardSpace);
 	}
 
 	public int getHeight() {
@@ -86,11 +92,10 @@ public class Board {
 	}
 
 	public void draw(Graphics frame) {
-		
+
 		for (BoardSpace boardSpace : gameSpaces) {
 			boardSpace.draw(frame);
 		}
-		
 
 	}
 
@@ -123,27 +128,62 @@ public class Board {
 	public void collectActions() {
 
 		for (PlayerWrper player : players) {
-			if (GameDice.getInstance().nextTurn()) {
-				int x = playersnextxpos(player);
-				int y = playersnextypos(player);
-				BoardSpace findSpaceGivenXY = findSpaceGivenStatus(statusus.get(player));
-				if(findSpaceGivenXY!=null) {
+
+			Status status = statusus.get(player);
+
+			if (!isSpaceOwned(status) && isBuyable(status)) {
+				actionsToTakeThisRound.add(new Buy(player, status, freeSpaces, takenSpaces));
+			}
+			if (isSpaceOwned(status)&& isBuyable(status)) {
+				double dub = Math.random() * 1;
+				if (dub > .5)
+					actionsToTakeThisRound.add(new Sell(player, status, freeSpaces, takenSpaces));
+				else
+					actionsToTakeThisRound.add(new Morgatge(player, status, freeSpaces, takenSpaces));
+
+			}
+			if(!isBuyable(status)) {
+				System.err.println("property "+status.name()+" landed on.");
+			}
+			instance.roll();
+			int x = playersnextxpos(player);
+			int y = playersnextypos(player);
+			BoardSpace findSpaceGivenXY = findSpaceGivenStatus(statusus.get(player));
+			if (findSpaceGivenXY != null) {
 				statusus.put(player, findSpaceGivenXY.getStatus());
 				actionsToTakeThisRound.add(new Move(x, y, player, this));
 				GameDice.getInstance().setNextTurn(false);
-				}
 			}
 		}
 
 	}
 
+	private boolean isBuyable(Status status) {
+		if (status == Status.GO || status == Status.GOTOJAIL || status == Status.FREEPARKING || status == Status.CC0
+				|| status == Status.CC1 || status == Status.CC2 || status == Status.ST || status == Status.INCOMETAX
+				|| status == Status.C0 || status == Status.C1 || status == Status.C2 | status == Status.C2UB
+				|| status == Status.JAIL)
+			return false;
+		else
+			return true;
+	}
+
+	private boolean isSpaceOwned(Status status) {
+		for (BoardSpace boardSpace : freeSpaces) {
+			if (boardSpace.getStatus() == status) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	private BoardSpace findSpaceGivenStatus(Status status) {
 		int lastRoll = instance.getLastRoll();
-		
+
 		Status nextStatus = Status.getNextStatus(status, lastRoll);
-		
+
 		for (BoardSpace boardSpace : gameSpaces) {
-			if(boardSpace.getStatus()==nextStatus)
+			if (boardSpace.getStatus() == nextStatus)
 				return boardSpace;
 		}
 		return null;
@@ -211,7 +251,7 @@ public class Board {
 			}
 		}
 
-		if (resol && GameDice.getInstance().nextTurn()) {
+		if (resol) {
 			actionsToTakeThisRound.clear();
 		}
 
@@ -253,7 +293,7 @@ public class Board {
 		for (RoundAction roundAction : actionsToTakeThisRound) {
 			resolved = resolved && roundAction.isResolved();
 		}
-			return resolved && GameDice.getInstance().nextTurn();
+		return resolved && GameDice.getInstance().nextTurn();
 	}
 
 	public int getPlayerCurrentPositionX(PlayerWrper player) {

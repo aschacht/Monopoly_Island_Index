@@ -29,7 +29,7 @@ public class LevelZero extends Level implements LevelI {
 		FlatLandFacebook.getInstance().releaseToken(this);
 		player1=new PlayerWrper(Color.RED,0,0,"Player1",1.0,true);
 		FlatLandFacebook.getInstance().requestToken(this);
-		FlatLandFacebook.getInstance().add(player,this);
+		FlatLandFacebook.getInstance().add(player1,this);
 		FlatLandFacebook.getInstance().releaseToken(this);
 		
 	}
