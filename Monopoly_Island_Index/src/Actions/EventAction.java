@@ -2,7 +2,7 @@ package Actions;
 
 import Player.Player;
 
-public interface EventAction {
+public interface EventAction extends Actn{
 
-	public void execute();
+	
 }

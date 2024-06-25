@@ -2,11 +2,10 @@ package Actions;
 
 import Player.Player;
 
-public  interface RoundAction {
+public  interface RoundAction extends Actn {
 
 
-	public void execute();
-	public boolean isResolved() ;
+	
 
 
 }

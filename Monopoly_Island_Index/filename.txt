@@ -1,11 +1,3 @@
-txtrWidth: width: 1300
-height: 1300
-total pixel count: 1690000
-Global Time: 3121
-FPS: 0
-
-
-rollTheDice: 
 slide1: 0
 slide2: 0
 slide3: 0

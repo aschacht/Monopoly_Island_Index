@@ -12,4 +12,10 @@ public class RailRoad implements EventAction {
 
 	}
 
+	@Override
+	public boolean isResolved() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

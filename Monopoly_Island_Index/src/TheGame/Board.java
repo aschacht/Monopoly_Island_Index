@@ -5,11 +5,20 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import Actions.Actn;
 import Actions.Buy;
+import Actions.CCSquare;
+import Actions.Chance;
+import Actions.FreeParking;
+import Actions.GTJail;
+import Actions.GoAction;
+import Actions.IncomeTax;
+import Actions.LuxeryTax;
 import Actions.Morgatge;
 import Actions.Move;
 import Actions.RoundAction;
 import Actions.Sell;
+import Actions.Visiting;
 import Math.*;
 import XMLLoader.PlayerWrper;
 
@@ -33,7 +42,7 @@ public class Board {
 	HashMap<PlayerWrper, ArrayList<BoardSpace>> currentPositions = new HashMap<>();
 	HashMap<PlayerWrper, Status> statusus = new HashMap<>();
 	ArrayList<RoundAction> roundActionHistory = new ArrayList<>();
-	ArrayList<RoundAction> actionsToTakeThisRound = new ArrayList<>();
+	ArrayList<Actn> actionsToTakeThisRound = new ArrayList<>();
 	ArrayList<HashMap<PlayerWrper, PlayerPositions>> posHist = new ArrayList<>();
 	private GameDice instance;
 
@@ -120,7 +129,7 @@ public class Board {
 
 	}
 
-	public ArrayList<RoundAction> getActions() {
+	public ArrayList<Actn> getActions() {
 		return actionsToTakeThisRound;
 
 	}
@@ -131,6 +140,25 @@ public class Board {
 
 			Status status = statusus.get(player);
 
+			if(!isBuyable(status)) {
+				if(status == Status.C0 || status == Status.C1 || status == Status.C2|| status == Status.C2UB) {
+					actionsToTakeThisRound.add(new Chance(player, status, freeSpaces, takenSpaces));
+				}else if(status == Status.CC0 || status == Status.CC1 || status == Status.CC2) {
+					actionsToTakeThisRound.add(new CCSquare(player, status, freeSpaces, takenSpaces));
+				}else if(status == Status.GOTOJAIL) {
+					actionsToTakeThisRound.add(new GTJail(player, status, freeSpaces, takenSpaces));
+				}else if(status == Status.JAIL) {
+					actionsToTakeThisRound.add(new Visiting(player, status, freeSpaces, takenSpaces));
+				}else if(status == Status.GO) {
+					actionsToTakeThisRound.add(new GoAction(player, status, freeSpaces, takenSpaces));
+				}else if(status == Status.FREEPARKING) {
+					actionsToTakeThisRound.add(new FreeParking(player, status, freeSpaces, takenSpaces));
+				}else if(status == Status.ST) {
+					actionsToTakeThisRound.add(new LuxeryTax(player, status, freeSpaces, takenSpaces));
+				}else if(status == Status.INCOMETAX) {
+					actionsToTakeThisRound.add(new IncomeTax(player, status, freeSpaces, takenSpaces));
+				}
+			}
 			if (!isSpaceOwned(status) && isBuyable(status)) {
 				actionsToTakeThisRound.add(new Buy(player, status, freeSpaces, takenSpaces));
 			}
@@ -245,7 +273,7 @@ public class Board {
 	public void executeActions() {
 		boolean resol = true;
 		if (!actionResolved()) {
-			for (RoundAction roundAction : actionsToTakeThisRound) {
+			for (Actn roundAction : actionsToTakeThisRound) {
 				roundAction.execute();
 				resol = resol && roundAction.isResolved();
 			}
@@ -290,7 +318,7 @@ public class Board {
 
 	public boolean actionResolved() {
 		boolean resolved = true;
-		for (RoundAction roundAction : actionsToTakeThisRound) {
+		for (Actn roundAction : actionsToTakeThisRound) {
 			resolved = resolved && roundAction.isResolved();
 		}
 		return resolved && GameDice.getInstance().nextTurn();

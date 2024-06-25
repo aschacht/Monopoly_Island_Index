@@ -11,4 +11,10 @@ public class Utilities implements EventAction {
 
 	}
 
+	@Override
+	public boolean isResolved() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
