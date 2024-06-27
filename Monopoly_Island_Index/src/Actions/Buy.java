@@ -52,7 +52,7 @@ public class Buy implements RoundAction {
 				takenSpaces.remove(player);
 				takenSpaces.put(player, arrayList);
 			}
-			System.err.println("player "+player.getName()+" purchased "+ remove.getStatus().name());
+			System.out.println("player "+player.getName()+" purchased "+ remove.getStatus().name());
 			resolved = true;
 		}else {
 			resolved = true;

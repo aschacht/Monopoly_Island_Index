@@ -170,9 +170,7 @@ public class Board {
 					actionsToTakeThisRound.add(new Morgatge(player, status, freeSpaces, takenSpaces));
 
 			}
-			if(!isBuyable(status)) {
-				System.err.println("property "+status.name()+" landed on.");
-			}
+
 			instance.roll();
 			int x = playersnextxpos(player);
 			int y = playersnextypos(player);
