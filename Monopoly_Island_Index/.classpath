@@ -27,5 +27,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/AntAnimation"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/LOGGING"/>
 	<classpathentry kind="src" path="/theStart"/>
+	<classpathentry kind="src" path="/ScreenIntegration"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

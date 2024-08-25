@@ -20,6 +20,8 @@ import Actions.RoundAction;
 import Actions.Sell;
 import Actions.Visiting;
 import Math.*;
+import Rules.BoardRules;
+import Rules.RuleInterpreter;
 import XMLLoader.PlayerWrper;
 
 public class Board {
@@ -34,6 +36,9 @@ public class Board {
 	RuleInterpreter rI = new RuleInterpreter(rules);
 
 	ArrayList<PlayerWrper> players = new ArrayList<>();
+	private HashMap<Integer,PlayerWrper> turnOrderPlayer = new HashMap<>();
+	private HashMap<PlayerWrper,Integer> playersTurnOrder = new HashMap<>();
+	private Integer currentTurn = 0;
 
 	HashMap<PlayerWrper, PlayerSpaces> portfolios = new HashMap<>();
 	HashMap<PlayerWrper, PlayerChance> chance = new HashMap<>();
@@ -134,9 +139,9 @@ public class Board {
 
 	}
 
-	public void collectActions() {
+	public void collectActions(PlayerWrper player) {
 
-		for (PlayerWrper player : players) {
+		
 
 			Status status = statusus.get(player);
 
@@ -180,7 +185,7 @@ public class Board {
 				actionsToTakeThisRound.add(new Move(x, y, player, this));
 				GameDice.getInstance().setNextTurn(false);
 			}
-		}
+		
 
 	}
 
@@ -194,7 +199,7 @@ public class Board {
 			return true;
 	}
 
-	private boolean isSpaceOwned(Status status) {
+	public boolean isSpaceOwned(Status status) {
 		for (BoardSpace boardSpace : freeSpaces) {
 			if (boardSpace.getStatus() == status) {
 				return false;
@@ -264,13 +269,13 @@ public class Board {
 				return boardSpace.getxPos();
 			}
 		}
-		System.out.println("no Go found");
+		System.out.println("no Go thisfound");
 		return -1;
 	}
 
-	public void executeActions() {
+	public void executeActions(PlayerWrper player) {
 		boolean resol = true;
-		if (!actionResolved()) {
+		if (!previousRoundActionResolved()) {
 			for (Actn roundAction : actionsToTakeThisRound) {
 				roundAction.execute();
 				resol = resol && roundAction.isResolved();
@@ -283,7 +288,7 @@ public class Board {
 
 	}
 
-	public void updatePlayerPosition() {
+	public void updatePlayerPositionthis() {
 		for (PlayerWrper playerWrper : players) {
 			int x = playerWrper.getX();
 			int y = playerWrper.getY();
@@ -314,7 +319,7 @@ public class Board {
 		return null;
 	}
 
-	public boolean actionResolved() {
+	public boolean previousRoundActionResolved() {
 		boolean resolved = true;
 		for (Actn roundAction : actionsToTakeThisRound) {
 			resolved = resolved && roundAction.isResolved();
@@ -331,6 +336,73 @@ public class Board {
 	public int getPlayerCurrentPositionY(PlayerWrper player) {
 		ArrayList<BoardSpace> arrayList = currentPositions.get(player);
 		return arrayList.get(0).getyPos();
+	}
+
+	public boolean hasWinner() {
+		return false;
+	}
+
+	public ArrayList<PlayerWrper> getPlayers() {
+		return players;
+	}
+
+	public PlayerWrper currentPlayer() {
+
+		return turnOrderPlayer.get(currentTurn);
+	}
+
+	public Integer getCurrentTurn() {
+		return currentTurn;
+	}
+
+	public void setCurrentTurn(Integer currentTurn) {
+		if(currentTurn>=players.size())
+			currentTurn = 0;
+		this.currentTurn = currentTurn;
+	}
+
+
+
+	public void setPlayersTurnOrder(Integer turn, PlayerWrper player) {
+		
+		
+		this.playersTurnOrder.put(player, turn);
+		this.turnOrderPlayer.put(turn, player);
+	}
+
+	public Integer getPlayersTurnOrder(PlayerWrper player) {
+		return playersTurnOrder.get(player);
+	}
+
+	public void setPlayersTurnOrder(HashMap<PlayerWrper,Integer> playersTurnOrder) {
+		this.playersTurnOrder = playersTurnOrder;
+	}
+
+	public static ArrayList<BoardSpace> getTakenSpacesByPlayer(PlayerWrper player) {
+		return takenSpaces.get(player);
+	}
+
+	
+
+	public boolean isSpaceOwnedByPlayer(Status status, PlayerWrper player) {
+		ArrayList<BoardSpace> arrayList = takenSpaces.get(player);
+		if(arrayList!=null) {
+		for (BoardSpace boardSpace : arrayList) {
+			if(boardSpace.getStatus() == status) {
+				return true;
+			}
+		}
+		}
+		
+		
+		return false;
+	}
+
+	public void interpretRules(PlayerWrper player) {
+		int playersnextypos = playersnextypos(player);
+		int playersnextxpos = playersnextxpos(player);
+		BoardSpace findSpaceGivenXY = findSpaceGivenXY(playersnextxpos, playersnextypos);
+		rI.checkRules(player, findSpaceGivenXY, this);
 	}
 
 }

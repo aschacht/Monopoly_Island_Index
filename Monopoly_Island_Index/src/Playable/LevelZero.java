@@ -1,29 +1,29 @@
 package Playable;
 
-import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferStrategy;
-
-import javax.swing.JPanel;
+import java.io.IOException;
 
 import FSM.Level;
 import FSM.LevelI;
-import FlatLand.ViewableFlatLand;
+import FlatLandStructure.ViewableFlatLand;
 import FlatLander.FlatLandFacebook;
-import Player.Player;
 import TheGame.Board;
-import View.GameScreen;
 import XMLLoader.PlayerWrper;
+import flatLand.trainingGround.Sprites.SkeletonTwo;
+import flatLand.trainingGround.Sprites.ZombieBaby;
+import theStart.theView.TheControls.GameScreen;
 
 public class LevelZero extends Level implements LevelI {
 	PlayerWrper player= null;
 	private PlayerWrper player1;
+	private PlayerWrper player2;
 
 	
 	
 	public LevelZero() {
+		try {
 		player=new PlayerWrper(Color.RED,0,0,"Player0",1.0,true);
+			player.setSprite(new SkeletonTwo("res/zombie_n_skeleton2.png", 90));
 		FlatLandFacebook.getInstance().requestToken(this);
 		FlatLandFacebook.getInstance().add(player,this);
 		FlatLandFacebook.getInstance().releaseToken(this);
@@ -31,6 +31,16 @@ public class LevelZero extends Level implements LevelI {
 		FlatLandFacebook.getInstance().requestToken(this);
 		FlatLandFacebook.getInstance().add(player1,this);
 		FlatLandFacebook.getInstance().releaseToken(this);
+		player1.setSprite(new ZombieBaby("res/zombie_n_skeleton2.png", 90));
+		player2=new PlayerWrper(Color.RED,0,0,"Player2",1.0,true);
+		FlatLandFacebook.getInstance().requestToken(this);
+		FlatLandFacebook.getInstance().add(player2,this);
+		FlatLandFacebook.getInstance().releaseToken(this);
+		player2.setSprite(new ZombieBaby("res/zombie_n_skeleton2.png", 90));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -41,7 +51,11 @@ public class LevelZero extends Level implements LevelI {
 	@Override
 	public boolean play(ViewableFlatLand flatLandLE, Board board, GameScreen panel) {
 		board.addPlayer(player);
+		board.setPlayersTurnOrder(0,player);
 		board.addPlayer(player1);
+		board.setPlayersTurnOrder(1,player1);	
+		board.addPlayer(player2);
+		board.setPlayersTurnOrder(2,player2);	
 		super.play(flatLandLE,board,panel);
 	
 		

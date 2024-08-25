@@ -1,18 +1,12 @@
 package FSM;
 
-import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
-import Actions.RoundAction;
-import FlatLand.ViewableFlatLand;
-import FlatLand.Physics.Physics;
+import FlatLandStructure.ViewableFlatLand;
 import TheGame.Board;
-import View.GameScreen;
+import XMLLoader.PlayerWrper;
 import flatLand.trainingGround.theStudio.Camera;
+import theStart.theView.TheControls.GameScreen;
 
 public abstract class Level {
 
@@ -31,36 +25,31 @@ public abstract class Level {
 	public boolean play(ViewableFlatLand flatLandLE, Board board, GameScreen panel) {
 
 		flatLandLE.setFlatLandColor(Color.green);
-		try {
-			while (true) {
-				long start = System.currentTimeMillis();
+		while (!board.hasWinner()) {
+			for (PlayerWrper player : board.getPlayers()) {
+
 				panel.getGraphics();
-				
+
 				flatLandLE.update();
 
-
-			
-				
-				
 				panel.repaint();
-				long end = System.currentTimeMillis();
 
-				long length = end - start;
-				if (16 - (length / 1000) > 0)
-					Thread.sleep(16 - (length / 1000));
-
-				if (board.actionResolved())
-					board.collectActions();
-				else {
-					board.executeActions();
-
-				}
-
+					if(!board.previousRoundActionResolved() && board.getCurrentTurn() == board.getPlayersTurnOrder(player)) {
+						board.executeActions(player);
+						
+					
+					}
+					if(board.previousRoundActionResolved()&&board.getCurrentTurn() == board.getPlayersTurnOrder(player)) {
+						
+						board.interpretRules(player);
+						board.setCurrentTurn(board.getCurrentTurn()+1);
+						board.collectActions(player);
+					}
+					
 			}
 
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
+
 		return false;
 	}
 }

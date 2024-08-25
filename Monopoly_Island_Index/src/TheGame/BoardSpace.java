@@ -18,6 +18,7 @@ public class BoardSpace implements Space {
     int topBottemY = -65;
     int rightX = -40;
     int rightY = -15;
+	private boolean morgataged;
     
     
     public BoardSpace(int position, int side, String name, int width, int height,Status status) {
@@ -197,5 +198,9 @@ public class BoardSpace implements Space {
 
 	public Status getStatus() {
 		return status;
+	}
+
+	public boolean morgataged() {
+		return morgataged;
 	}
 }

@@ -1,11 +1,6 @@
 package GameView;
 
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-
-import Drawing.ImagePile;
-import FlatLand.ViewableFlatLand;
+import FlatLandStructure.ViewableFlatLand;
 import View.FlatLandWindow;
 import flatLand.trainingGround.theStudio.Camera;
 

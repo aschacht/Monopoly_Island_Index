@@ -7,6 +7,7 @@ import Player.Player;
 import TheGame.BoardSpace;
 import TheGame.Status;
 import XMLLoader.PlayerWrper;
+import testing.VariableRepository;
 
 public class Chance implements RoundAction {
 
@@ -30,7 +31,28 @@ public class Chance implements RoundAction {
 	@Override
 	public void execute() {
 		System.out.println("landed on "+status.name());
-		resolved = true;
+		VariableRepository instance = VariableRepository.getInstance();
+		boolean but0 = instance.isBut0();
+		boolean but1 = instance.isBut1();
+		while(!but0 && !but1) {
+			
+			
+			but0 = instance.isBut0();
+			but1 = instance.isBut1();
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			}
+		if(but0)
+			System.out.println("played Chance");
+		else if(but1)
+			System.out.println("didnt play Chance");
+		instance.setBut0(false);
+		instance.setBut1(false);
+	resolved = true;
 
 	}
 

@@ -52,12 +52,13 @@ public class Sell implements RoundAction {
 	private boolean doesPlayerOwn() {
 		Set<PlayerWrper> keySet = takenSpaces.keySet();
 		ArrayList<BoardSpace> arrayList = takenSpaces.get(player);
+		if(arrayList!=null) {
 		for (BoardSpace boardSpace : arrayList) {
 			if (boardSpace.getStatus() == status) {
 				return true;
 			}
 
-		}
+		}}
 		return false;
 	}
 

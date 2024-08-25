@@ -1,8 +1,16 @@
-package TheGame;
+package Rules;
+
+import java.util.ArrayList;
+
+import TheGame.Board;
+import TheGame.BoardSpace;
+import XMLLoader.PlayerWrper;
 
 public class BoardRules {
-	
-	
+	ArrayList<TheRules> rules = new ArrayList<>();
+	public BoardRules(){
+		rules.add(new PropertyRule());
+	}
 	/*
 	players each start with $Y
 	players collect $X when they Pass go
@@ -50,8 +58,16 @@ public class BoardRules {
 	player may build houses/hotels to increase rent
 	(build 4 houses first then replace them with hotels.)
 	
-	
+	the game ends when all but one player have gone bankrupt
 	*/
+	public void check(PlayerWrper player, BoardSpace boardSpace, Board board) {
+
+		for (TheRules rule : rules) {
+			rule.check(player, boardSpace, board);
+		}
+		
+		
+	}
 	
 	
 	

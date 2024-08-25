@@ -1,26 +1,19 @@
 package Playable;
 
-import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-
-import javax.swing.JPanel;
-
 import FSM.Level;
 import FSM.LevelI;
-import FlatLand.ViewableFlatLand;
 import FlatLand.Physics.Physics;
+import FlatLandStructure.ViewableFlatLand;
 import FlatLander.FlatLandFacebook;
 import FlatLander.PlayerKeybordHandler;
 import FlatLander.TypeOfEntity;
 import TheGame.Board;
-import View.GameScreen;
 import XMLLoader.FlatLanderWrper;
 import XMLLoader.PlayerWrper;
 import flatLand.trainingGround.Sprites.TerminalSprite;
 import flatLand.trainingGround.theStudio.Camera;
+import theStart.theView.TheControls.GameScreen;
 
 public class LevelPlayer extends Level implements LevelI {
 	private static Camera theEyeInTheSky;
@@ -46,7 +39,7 @@ public class LevelPlayer extends Level implements LevelI {
 		FlatLanderWrper terminal = new FlatLanderWrper(100, 100, "Terminal", 1, false, false, TypeOfEntity.TERRAIN, Color.MAGENTA);
 		PlayerKeybordHandler kh = new PlayerKeybordHandler(terminal);
 		kh.buildKeyBindings(panel);
-		terminal.setSprite(new TerminalSprite(terminalPath, 128, 64));
+		terminal.setSprite(new TerminalSprite(terminalPath, 128, 64,100));
 		Object theRequestie = new Object();
 		while (!FlatLandFacebook.getInstance().requestToken(theRequestie)) {
 		}

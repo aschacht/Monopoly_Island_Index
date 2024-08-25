@@ -1,12 +1,8 @@
 package Island;
 
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,35 +14,25 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
-import javax.imageio.ImageIO;
-
-import Drawing.ImagePile;
 import FSM.GameInstance;
-import FlatLand.ViewableFlatLand;
-import FlatLand.Physics.Physics;
+import FlatLandStructure.ViewableFlatLand;
 import FlatLander.FlatLandFacebook;
 import FlatLander.TypeOfEntity;
-import GameView.GameWindow;
 import Logging.LOG;
 import TheGame.Board;
 import TheGame.BoardSpace;
 import TheGame.Status;
 import View.FlatLandWindow;
-import View.GameScreen;
 import XMLLoader.FlatLanderWrper;
-import XMLLoader.PlayerWrper;
 import animation.Asset;
 import flatLand.trainingGround.GAMSTATUS;
 import flatLand.trainingGround.GameStatus;
-import flatLand.trainingGround.Sprites.GenericSprite;
 import flatLand.trainingGround.Sprites.MonopolySpace;
-import flatLand.trainingGround.Sprites.SceneObject;
-import flatLand.trainingGround.Sprites.SkeletonTwo;
 import flatLand.trainingGround.theStudio.Camera;
-import theStart.theView.TheStartCamera;
+import theStart.theView.TheControls.GameScreen;
+import theStart.theView.TheControls.TheStartCamera;
 
 public class IslandIndex extends LOG {
 
